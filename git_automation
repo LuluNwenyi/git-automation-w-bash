@@ -46,7 +46,7 @@ push () {
     else
         echo -e "\nRemote origin already exists \n";
     fi
-    
+
     echo -e "\nCan I confirm the push (y/n) ?";  # confirm the push.
     read user_confirmation;  # read the user input.
     echo;
@@ -60,12 +60,18 @@ push () {
     fi
 }
 
+pull () {
+    echo -e "\nPulling Changes from the Remote Repository \n";
+    git pull; # pull the changes from the remote repository.
+}
+
 cat <<'EOF'            
          Menu                   
 -------------------------------------------------------                          
 Enter 1 - To clone a Repo                          
 Enter 2 - To add and commit changes to the Repo
-Enter 3 - To push changes to a Repo                       
+Enter 3 - To push changes to a Repo
+Enter 4 - To pull changes from a Repo                       
 -------------------------------------------------------                       
 EOF
 
@@ -83,6 +89,9 @@ case $user_choice in
     3)
     push $remote_url;;
 
+    4)
+    pull $remote_url;;
+
     *)
-    echo -e "\nInvalid Choice \n";;
+    echo -e "\nInvalid Choice \n";
 esac
