@@ -1,8 +1,6 @@
 #!/bin/bash
 
-# This script is used to automate the process of creating a new branch and pushing it to the remote repository.
-# It also creates a new directory with the same name as the branch name and creates a README.md file in it.
-
+# This script automates the process of cloning a git repository, adding and committing changes to the repository, and pushing the changes to the remote repository.
 
 clone () {                                             
     git clone $remote_url;                                                 
@@ -38,6 +36,17 @@ add_commit () {
 }
 
 push () {
+    if [ $? -eq 0 ];
+    then
+        echo -e "\nCreating a main branch \n"; # create a new branch.
+        git branch -M main;
+
+        echo -e "\nAdding Remote URL \n"; # add the remote url.
+        git remote add origin $remote_url;
+    else
+        echo -e "\nRemote origin already exists \n";
+    fi
+    
     echo -e "\nCan I confirm the push (y/n) ?";  # confirm the push.
     read user_confirmation;  # read the user input.
     echo;
@@ -45,7 +54,7 @@ push () {
     if [ $user_confirmation == "y" ];  # if the user confirms the push, then push the changes.
     then
         echo -e "\nPushing Changes to the Remote Repository \n";
-        git push origin main;
+        git push -u origin main;
     else
         echo -e "\nPush Cancelled \n";
     fi
@@ -59,7 +68,6 @@ Enter 2 - To add and commit changes to the Repo
 Enter 3 - To push changes to a Repo                       
 -------------------------------------------------------                       
 EOF
-
 
 
 read user_choice;   
