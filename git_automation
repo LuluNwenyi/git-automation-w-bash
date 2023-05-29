@@ -1,0 +1,80 @@
+#!/bin/bash
+
+# This script is used to automate the process of creating a new branch and pushing it to the remote repository.
+# It also creates a new directory with the same name as the branch name and creates a README.md file in it.
+
+
+clone () {                                             
+    git clone $remote_url;                                                 
+    if [ $? -eq 0 ];   # if the exit status of the previous command is 0, then the clone was successful.                                               
+    then                         
+        echo -e "\nClone was successful, Enjoy your Day. \n";                         
+    else                       
+        echo -e "\nEither URL is invalid, or you've already cloned it here. \n";                        
+    fi
+}
+
+add_commit () {                                  
+    flag=0;
+    dir="./.git";  # check if the current directory is a git repo or not.
+    if [ ! -d "$dir" ];  # if the directory does not exist, then initialize the current directory.
+    then
+        echo -e "No Version Control History Found. Initializing the Current Directory \n";
+        git init;
+        flag=1;
+    else
+        echo -e "\nVersion control history found. \n";
+    fi
+
+    echo -e "\nAdding Files to Push\n"; # add all the files to the staging area.
+    git add -A;
+
+    echo -e "\nPrinting Git Status \n"; # print the git status.
+    git status;
+
+    echo -e "\nEnter the commit message \n"; # enter the commit message.
+    read commit_message;
+    git commit -m "$commit_message"; # commit the changes.
+}
+
+push () {
+    echo -e "\nCan I confirm the push (y/n) ?";  # confirm the push.
+    read user_confirmation;  # read the user input.
+    echo;
+
+    if [ $user_confirmation == "y" ];  # if the user confirms the push, then push the changes.
+    then
+        echo -e "\nPushing Changes to the Remote Repository \n";
+        git push origin main;
+    else
+        echo -e "\nPush Cancelled \n";
+    fi
+}
+
+cat <<'EOF'            
+         Menu                   
+-------------------------------------------------------                          
+Enter 1 - To clone a Repo                          
+Enter 2 - To add and commit changes to the Repo
+Enter 3 - To push changes to a Repo                       
+-------------------------------------------------------                       
+EOF
+
+
+
+read user_choice;   
+echo "Enter a git repo URL";           
+read remote_url;                                            
+case $user_choice in                        
+    1)                         
+    clone $remote_url;;
+
+    2)
+    add_commit $remote_url;;
+
+    3)
+    push $remote_url;;
+
+    *)
+    echo -e "\nInvalid Choice \n";;
+esac
